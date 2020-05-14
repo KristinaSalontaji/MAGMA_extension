@@ -1,13 +1,3 @@
-library(EWCE)
-library(data.table)
-library(tidyr)
-library(readr)
-library(dplyr)
-library(tibble)
-library(reshape2)
-library(Matrix)
-library(readxl)
-
 #' magma.run.individual.analysis
 #'
 #' \code{magma.run.individual.analysis} Takes cell type data files from individual cases, merges all MAGMA results and returns graphs based on diagnosis.
@@ -28,8 +18,10 @@ library(readxl)
 #' @import ggdendro
 #' @import gridExtra
 #' @import EWCE
- 
-ctd_individuals = magma.run.individual.analysis(ctd_loc = ctd_loc,specificity_species = "human", gwas_species = "human", gwas_sumstats_path=gwas_sumstats_path, genome_ref_path = genome_ref_path, EnrichmentMode = "Top 10%")
+#' @import tidyr
+#' @import dplyr
+#' @import tibble
+#' @import stringr
 
 
 magma.run.individual.analysis <- function(ctd_loc,specificity_species, gwas_species, gwas_sumstats_path, genome_ref_path, EnrichmentMode, numberOfBins = 41){
@@ -64,6 +56,8 @@ magma.run.individual.analysis <- function(ctd_loc,specificity_species, gwas_spec
   level_1_list <- list()
   level_2_list <- list()
   
+  library(stringr)
+  
   for(i in result_files){
     fResult= i
     load(fResult)
@@ -92,33 +86,27 @@ magma.run.individual.analysis <- function(ctd_loc,specificity_species, gwas_spec
   level_2_results = do.call("rbind", level_2_list)
   full_results = list(level_1_results = level_1_results, level_2_results = level_2_results)
 
+  log10p_adj_l1 = log10(0.5/(n_distinct(level_1_results$Celltype)*2))
+  log10p_adj_l2 = log10(0.5/(n_distinct(level_2_results$Celltype)*2))
+
   library(ggplot2)
   library(cowplot)
   
   png(file = "results_level1.png", width = 662, height = 515)
-  ggplot(level_1_results)+
-    geom_boxplot(aes(x=log10p,y=Celltype,fill=diagnosis))+
+  ggplot(level_1_results) +
+    geom_boxplot(aes(x=log10p,y=Celltype,fill=diagnosis)) +
+    geom_vline(xintercept = log10p_adj_l1) +
     theme_cowplot()
-  dev.off()
-  
-  png(file = "results_level1_barplot.png", width = 662, height = 515)
-  ggplot(level_1_results) + 
-	geom_col(aes(x=log10p,y=Celltype, fill=diagnosis), position = "dodge")+ 
-	theme_cowplot()
   dev.off()
   
   png(file = "results_level2.png", width = 662, height = 1022)
-  ggplot(level_2_results)+
-    geom_boxplot(aes(x=log10p,y=Celltype,fill=diagnosis))+
+  ggplot(level_2_results) +
+    geom_boxplot(aes(x=log10p,y=Celltype,fill=diagnosis)) +
+    geom_vline(xintercept = log10p_adj_l2) +
     theme_cowplot()
   dev.off()
-  
-  png(file = "results_level2_barplot.png", width = 662, height = 1022)  
-  ggplot(level_2_results) + 
-    geom_col(aes(x=log10p,y=Celltype, fill=diagnosis), position = "dodge")+ 
-    theme_cowplot()
-  dev.off()
-  
+ 
+ 
   save(full_results, file = "full_results_per_individual.rda")
   return(full_results)
 
