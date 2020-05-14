@@ -48,9 +48,6 @@ generate.individual.ctds <- function(exp,annot,run_sctransform = TRUE, numCores 
   #convert exp to matrix
   mat = as.matrix(exp)
   
-  # drop uninformative genes for the whole dataset
-  mat = drop.uninformative.genes(exp=mat,level2annot = annot[["level2class"]])
-  
   ## vector of donors
   #patient_id <- unique(annot$patient_id)
   
@@ -65,16 +62,6 @@ generate.individual.ctds <- function(exp,annot,run_sctransform = TRUE, numCores 
     mat_list[[length(mat_list)+1]] <- mat_split
   }
   
-  annot_split = list(M3 = annot_split$M3, M4 = annot_split$M4)
-  mat_list = list(mat_list[[3]], mat_list[[4]])
-  
-  annot_split3 = list(M3 = annot_split$M3)
-  mat_list3 = list(mat_list[[1]])
-  
-  annot_split4 = list(M4 = annot_split$M4)
-  mat_list4 = list(mat_list[[2]])
-  
-  
   ctd_loc <- list()
   library(foreach)
   #remove_short!!!
@@ -83,9 +70,11 @@ generate.individual.ctds <- function(exp,annot,run_sctransform = TRUE, numCores 
     print(j[1:3,1:3])
     GroupName <- name
     print(GroupName)
-    celltype_data_file = generate.celltype.data(exp= j, annot = i, GroupName = GroupName, 4)
+    j = drop.uninformative.genes(exp=j,level2annot = annot[["level2class"]])
+  	annotLevels = list(level1class=i[["level1class"]],level2class=i[["level2class"]])
+  	celltype_data_file = EWCE::generate.celltype.data(exp= j, annotLevels = annotLevels, groupName = GroupName)
     ctd_loc[[length(ctd_loc)+1]] <- celltype_data_file
   }
-  save(ctd_loc, file = "ctd_loc_fov.rda")
+  save(ctd_loc, file = "ctd_loc.rda")
   return(ctd_loc) 
 }
