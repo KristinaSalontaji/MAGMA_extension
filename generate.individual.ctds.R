@@ -1,13 +1,3 @@
-library(EWCE)
-library(data.table)
-library(tidyr)
-library(readr)
-library(dplyr)
-library(tibble)
-library(reshape2)
-library(Matrix)
-library(readxl)
-
 #' generate.individual.ctds
 #'
 #' \code{generate.individual.ctds} Splits expression & cell type annotations per individual and creates celltype_data files which contain the mean and specificity matrices
@@ -30,17 +20,15 @@ library(readxl)
 #' @import gridExtra
 #' @import EWCE
 
-
 generate.individual.ctds <- function(exp,annot,run_sctransform = TRUE, numCores = 4){
   library(EWCE)
   library(data.table)
   library(tidyr)
-  library(readr)
   library(dplyr)
   library(tibble)
   library(reshape2)
   library(Matrix)
-  library(readxl)
+  library(stringr)
 
   annot$patient_info <- paste(annot$patient_id,annot$pathology, sep = "_")
   annot_split <- split(annot, annot$patient_info)
