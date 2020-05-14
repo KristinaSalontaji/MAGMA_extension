@@ -82,10 +82,8 @@ The GWAS summary statistics need to meet the following requirements in order to 
 # specify the directory of the GWAS summary statistics:
 gwas_sumstats_path = "~/AD_sumstats_Jansenetal_MOD.txt"
 
-
 # Format it (i.e. column headers, provide N argument if not contained withing the summary statistics fle)
 col_headers = format_sumstats_for_magma(gwas_sumstats_path, N=369385)
-
 ```
 
 ### Map SNPs to Genes
@@ -110,14 +108,12 @@ For the linear association analysis we will run
 
 ```{r, eval=FALSE }
 ctd_individuals = magma.run.individual.analysis(ctd_loc = ctd_loc,specificity_species = "human", gwas_species = "human", gwas_sumstats_path = gwas_sumstats_path = gwas_sumstats_path, genome_ref_path = genome_ref_path, EnrichmentMode = "Linear")
-
 ```
 
 For the Top 10% mode we will run
 
 ```{r, eval=FALSE }
 ctd_individuals = magma.run.individual.analysis(ctd_loc,specificity_species = "human", gwas_species = "human", gwas_sumstats_path = gwas_sumstats_path_formatted, genome_ref_path = genome_ref_path, EnrichmentMode = "Top 10%")
-
 ```
 
 The generated boxplots based on diagnosis will be saved in these files:
@@ -147,6 +143,7 @@ If you use the cell type dataset from University College London, please cite:
 If you use the GWAS on Alzheimer's disease, please cite:
 
 [Jansen, et al. Genome-wide meta-analysis identifies new loci and functional pathways influencing Alzheimer’s disease risk.
-Nature Genetics, 2019.] (https://www.nature.com/articles/s41588-018-0311-9)
+Nature Genetics, 2019.](https://www.nature.com/articles/s41588-018-0311-9) 
+
 
 
