@@ -50,7 +50,6 @@ generate.celltype.data <- function(exp,annot, GroupName, run_sct_transform = TRU
     print("run_sct_transform set to TRUE. Performing sct transform can take some time.")
 	normalized_exp <- sctransform::vst(exp_sparse,return_corrected_umi=TRUE) #$umi_corrected
 	normalized_exp_umi = normalized_exp$umi_corrected
-
   }
   
 
@@ -107,7 +106,7 @@ generate.celltype.data <- function(exp,annot, GroupName, run_sct_transform = TRU
   #add dendrogram data
   ctd = lapply(ctd,bin.specificity.into.quantiles,numberOfBins=40)
   library(ggdendro)
-  ctd = lapply(ctd,prep.dendro)
+  ctd = lapply(ctd, prep.dendro)
     
   #save the data
   fNames=sprintf("CellTypeData_%s.rda", GroupName)
