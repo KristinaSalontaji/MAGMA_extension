@@ -86,8 +86,8 @@ magma.run.individual.analysis <- function(ctd_loc,specificity_species, gwas_spec
   level_2_results = do.call("rbind", level_2_list)
   full_results = list(level_1_results = level_1_results, level_2_results = level_2_results)
 
-  log10p_adj_l1 = log10(0.5/(n_distinct(level_1_results$Celltype)*2))
-  log10p_adj_l2 = log10(0.5/(n_distinct(level_2_results$Celltype)*2))
+  log10p_adj_l1 = log10(0.05/(n_distinct(level_1_results$Celltype)*2))
+  log10p_adj_l2 = log10(0.05/(n_distinct(level_2_results$Celltype)*2))
 
   library(ggplot2)
   library(cowplot)
